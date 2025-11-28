@@ -3,14 +3,14 @@ package repository
 import (
     "context"
     "uas-backend-go/app/model"
-    "github.com/jackc/pgx/v5"
+    "github.com/jackc/pgx/v5/pgxpool"
 )
 
 type PermissionRepository struct {
-    DB *pgx.Conn
+    DB *pgxpool.Pool
 }
 
-func NewPermissionRepository(db *pgx.Conn) *PermissionRepository {
+func NewPermissionRepository(db *pgxpool.Pool) *PermissionRepository {
     return &PermissionRepository{DB: db}
 }
 

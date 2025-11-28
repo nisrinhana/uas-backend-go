@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var Postgres *pgxpool.Pool
+var Postgres *pgxpool.Pool  // INI YANG DIPANGGIL DI main.go
 
 func InitPostgres() error {
 	dsn := os.Getenv("POSTGRES_URL")
@@ -16,15 +16,13 @@ func InitPostgres() error {
 		return fmt.Errorf("POSTGRES_URL is empty")
 	}
 
-	ctx := context.Background()
-
-	pool, err := pgxpool.New(ctx, dsn)
+	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
-		return fmt.Errorf("failed to connect PostgreSQL: %w", err)
+		return err
 	}
 
-	if err := pool.Ping(ctx); err != nil {
-		return fmt.Errorf("failed to ping PostgreSQL: %w", err)
+	if err := pool.Ping(context.Background()); err != nil {
+		return err
 	}
 
 	Postgres = pool
