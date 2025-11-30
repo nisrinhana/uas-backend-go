@@ -10,6 +10,9 @@ func AuthRoutes(r *gin.Engine, h *helper.AuthHelper) {
     g := r.Group("/api/v1/auth")
     {
         g.POST("/login", h.Login)
+        g.POST("/refresh", h.Refresh) 
+        g.POST("/logout", h.Logout)   
         g.GET("/profile", middleware.AuthRequired("view_profile"), h.Profile)
     }
 }
+

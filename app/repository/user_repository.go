@@ -122,3 +122,21 @@ func (r *UserRepository) GetByUsername(ctx context.Context, username string) (mo
     }
     return u, nil
 }
+
+func (r *UserRepository) UpdateRole(ctx context.Context, id string, roleID string) error {
+    commandTag, err := r.DB.Exec(ctx, `
+        UPDATE users
+        SET role_id=$1, updated_at=NOW()
+        WHERE id=$2
+    `, roleID, id)
+
+    if err != nil {
+        return err
+    }
+
+    if commandTag.RowsAffected() != 1 {
+        return errors.New("user not found")
+    }
+
+    return nil
+}

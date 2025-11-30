@@ -3,13 +3,16 @@ package model
 import "time"
 
 type User struct {
-	ID           string    `db:"id"`
-	Username     string    `db:"username"`
-	Email        string    `db:"email"`
-	PasswordHash string    `db:"password_hash"`
-	FullName     string    `db:"full_name"`
-	RoleID       string    `db:"role_id"`
-	IsActive     bool      `db:"is_active"`
-	CreatedAt    time.Time `db:"created_at"`
-	UpdatedAt    time.Time `db:"updated_at"`
+    ID           string    `json:"id"`
+    Username     string    `json:"username"`
+    Email        string    `json:"email"`
+    
+    // Field ini menerima "password" dari JSON
+    PasswordHash string    `json:"password"`
+
+    FullName     string    `json:"fullname"`
+    RoleID       string    `json:"role_id"`
+    IsActive     bool      `json:"is_active"`
+    CreatedAt    time.Time `json:"created_at"`
+    UpdatedAt    time.Time `json:"updated_at"`
 }

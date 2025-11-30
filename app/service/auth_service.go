@@ -38,11 +38,17 @@ func (s *AuthService) Login(ctx context.Context, username, password string) (str
         return "", model.User{}, nil, errors.New("invalid username or password")
     }
 
-    perms, _ := s.PermissionRepo.GetByRoleID(ctx, user.RoleID)
-    permNames := []string{}
-    for _, p := range perms {
-        permNames = append(permNames, p.Name)
-    }
+   roleID := user.RoleID
+
+perms, err := s.PermissionRepo.GetByRoleID(ctx, roleID)
+if err != nil {
+    return "", model.User{}, nil, errors.New("failed load permissions: " + err.Error())
+}
+
+permNames := []string{}
+for _, p := range perms {
+    permNames = append(permNames, p.Name)
+}
 
     token, err := helper.GenerateJWT(user.ID, user.RoleID, permNames)
     if err != nil {

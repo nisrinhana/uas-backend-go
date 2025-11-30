@@ -14,8 +14,7 @@ type CustomClaims struct {
     jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID string, roleID string, perms []string) (string, error) {
-
+func GenerateJWT(userID, roleID string, perms []string) (string, error) {
     claims := CustomClaims{
         UserID:      userID,
         RoleID:      roleID,
@@ -30,7 +29,6 @@ func GenerateJWT(userID string, roleID string, perms []string) (string, error) {
 }
 
 func VerifyJWT(tokenStr string) (*CustomClaims, error) {
-
     token, err := jwt.ParseWithClaims(tokenStr, &CustomClaims{}, func(t *jwt.Token) (interface{}, error) {
         return jwtSecret, nil
     })
@@ -44,4 +42,15 @@ func VerifyJWT(tokenStr string) (*CustomClaims, error) {
     }
 
     return claims, nil
+}
+
+// ===================== REFRESH JWT =====================
+func RefreshJWT(oldToken string) (string, error) {
+    claims, err := VerifyJWT(oldToken)
+    if err != nil {
+        return "", err
+    }
+
+    // Buat token baru dengan waktu kadaluarsa baru
+    return GenerateJWT(claims.UserID, claims.RoleID, claims.Permissions)
 }

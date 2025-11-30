@@ -35,25 +35,28 @@ func main() {
     // ================== CLEAN WARNING ===================
     gin.SetMode(gin.ReleaseMode)
 
-    r := gin.New()          // tanpa default warning
-    r.Use(gin.Logger())     // tambah logger manual
-    r.Use(gin.Recovery())   // tambah recovery manual
+    r := gin.New()          
+    r.Use(gin.Logger())     
+    r.Use(gin.Recovery())   
 
-    r.SetTrustedProxies(nil) // hilangkan “trusted all proxies”
-    // =====================================================
+    r.SetTrustedProxies(nil) 
 
-    // =============== REPOSITORY ===============
-    userRepo := repository.NewUserRepository(database.Postgres)
-    permRepo := repository.NewPermissionRepository(database.Postgres)
+  // Repository
+userRepo := repository.NewUserRepository(database.Postgres)
+permRepo := repository.NewPermissionRepository(database.Postgres)
 
-    // =============== SERVICE ===============
-    authService := service.NewAuthService(userRepo, permRepo)
+// Service
+authService := service.NewAuthService(userRepo, permRepo)
+userService := service.NewUserService(userRepo)
 
-    // =============== HELPER ===============
-    authHelper := helper.NewAuthHelper(authService)
+// Helper
+authHelper := helper.NewAuthHelper(authService)
+userHelper := helper.NewUserHelper(userService)
 
-    // =============== ROUTES ===============
-    route.AuthRoutes(r, authHelper)
+// Routes
+route.AuthRoutes(r, authHelper)
+route.UserRoutes(r, userHelper) // buat route users
+
 
     r.Run(":8080")
 }

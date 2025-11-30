@@ -33,3 +33,6 @@ func (s *UserService) Update(ctx context.Context, id string, user model.User) er
 func (s *UserService) Delete(ctx context.Context, id string) error {
     return s.UserRepo.Delete(ctx, id)
 }
+func (s *UserService) UpdateRole(ctx context.Context, id string, roleID string) error {
+    return s.UserRepo.UpdateRole(ctx, id, roleID)
+}
