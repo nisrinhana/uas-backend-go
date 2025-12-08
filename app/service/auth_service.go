@@ -7,8 +7,7 @@ import (
     "golang.org/x/crypto/bcrypt"
     "uas-backend-go/app/model"
     "uas-backend-go/app/repository"
-	"uas-backend-go/helper"
-
+    "uas-backend-go/utils"
 )
 
 type AuthService struct {
@@ -38,19 +37,19 @@ func (s *AuthService) Login(ctx context.Context, username, password string) (str
         return "", model.User{}, nil, errors.New("invalid username or password")
     }
 
-   roleID := user.RoleID
+    roleID := user.RoleID
 
-perms, err := s.PermissionRepo.GetByRoleID(ctx, roleID)
-if err != nil {
-    return "", model.User{}, nil, errors.New("failed load permissions: " + err.Error())
-}
+    perms, err := s.PermissionRepo.GetByRoleID(ctx, roleID)
+    if err != nil {
+        return "", model.User{}, nil, errors.New("failed load permissions: " + err.Error())
+    }
 
-permNames := []string{}
-for _, p := range perms {
-    permNames = append(permNames, p.Name)
-}
+    permNames := []string{}
+    for _, p := range perms {
+        permNames = append(permNames, p.Name)
+    }
 
-    token, err := helper.GenerateJWT(user.ID, user.RoleID, permNames)
+    token, err := utils.GenerateJWT(user.ID, user.RoleID, permNames)
     if err != nil {
         return "", model.User{}, nil, err
     }

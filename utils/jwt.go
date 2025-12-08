@@ -1,4 +1,4 @@
-package helper
+package utils
 
 import (
     "time"
@@ -10,6 +10,7 @@ var jwtSecret = []byte("SECRET_KEY")
 type CustomClaims struct {
     UserID      string   `json:"user_id"`
     RoleID      string   `json:"role_id"`
+    RoleName    string   `json:"role_name"`
     Permissions []string `json:"permissions"`
     jwt.RegisteredClaims
 }
@@ -18,6 +19,7 @@ func GenerateJWT(userID, roleID string, perms []string) (string, error) {
     claims := CustomClaims{
         UserID:      userID,
         RoleID:      roleID,
+        
         Permissions: perms,
         RegisteredClaims: jwt.RegisteredClaims{
             ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
@@ -44,13 +46,10 @@ func VerifyJWT(tokenStr string) (*CustomClaims, error) {
     return claims, nil
 }
 
-// ===================== REFRESH JWT =====================
 func RefreshJWT(oldToken string) (string, error) {
     claims, err := VerifyJWT(oldToken)
     if err != nil {
         return "", err
     }
-
-    // Buat token baru dengan waktu kadaluarsa baru
     return GenerateJWT(claims.UserID, claims.RoleID, claims.Permissions)
 }

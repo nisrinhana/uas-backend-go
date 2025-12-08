@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var Postgres *pgxpool.Pool  // INI YANG DIPANGGIL DI main.go
+var Postgres *pgxpool.Pool  
 
 func InitPostgres() error {
 	dsn := os.Getenv("POSTGRES_URL")

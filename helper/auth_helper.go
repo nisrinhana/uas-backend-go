@@ -6,6 +6,7 @@ import (
 
     "github.com/gin-gonic/gin"
     "uas-backend-go/app/model"
+    "uas-backend-go/utils"
 )
 
 type AuthServiceInterface interface {
@@ -64,28 +65,16 @@ func (h *AuthHelper) Profile(c *gin.Context) {
     c.JSON(200, user)
 }
 
-
-// POST /api/v1/auth/refresh
 func (h *AuthHelper) Refresh(c *gin.Context) {
-    authHeader := c.GetHeader("Authorization")
-    if len(authHeader) < 8 || authHeader[:7] != "Bearer " {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "missing token"})
-        return
-    }
-
-    tokenString := authHeader[7:]
-    newToken, err := RefreshJWT(tokenString) // langsung panggil fungsi
+    tokenString := c.GetHeader("Authorization")[7:]
+    newToken, err := utils.RefreshJWT(tokenString)
     if err != nil {
         c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
         return
     }
-
     c.JSON(http.StatusOK, gin.H{"token": newToken})
 }
 
-
-// POST /api/v1/auth/logout
 func (h *AuthHelper) Logout(c *gin.Context) {
-    // stateless JWT logout, hanya kasih pesan
     c.JSON(http.StatusOK, gin.H{"message": "logged out successfully"})
 }

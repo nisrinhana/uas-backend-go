@@ -44,19 +44,25 @@ func main() {
   // Repository
 userRepo := repository.NewUserRepository(database.Postgres)
 permRepo := repository.NewPermissionRepository(database.Postgres)
+achievementMongoRepo := repository.NewAchievementMongoRepository(
+    database.MongoDB.Collection("achievements"),
+)
+achievementRefRepo := repository.NewAchievementRefRepository(database.Postgres)
 
 // Service
 authService := service.NewAuthService(userRepo, permRepo)
 userService := service.NewUserService(userRepo)
+achievementService := service.NewAchievementService(achievementRefRepo, achievementMongoRepo)
 
 // Helper
 authHelper := helper.NewAuthHelper(authService)
 userHelper := helper.NewUserHelper(userService)
+achievementHelper := helper.NewAchievementHelper(achievementService)
 
 // Routes
 route.AuthRoutes(r, authHelper)
-route.UserRoutes(r, userHelper) // buat route users
-
+route.UserRoutes(r, userHelper) 
+route.AchievementRoutes(r, achievementHelper)
 
     r.Run(":8080")
 }

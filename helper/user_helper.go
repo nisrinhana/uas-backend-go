@@ -3,9 +3,11 @@ package helper
 import (
 	"context"
 	"net/http"
+
 	"github.com/google/uuid"
 
 	"uas-backend-go/app/model"
+	"uas-backend-go/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -66,7 +68,8 @@ func (h *UserHelper) Create(c *gin.Context) {
 	
 // Hash password langsung setelah binding
 if user.PasswordHash != "" {
-    user.PasswordHash = HashPassword(user.PasswordHash)
+user.PasswordHash = utils.HashPassword(user.PasswordHash)
+
 }
 
 
