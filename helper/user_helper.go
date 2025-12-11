@@ -1,15 +1,13 @@
 package helper
 
 import (
-	"context"
-	"net/http"
+    "context"
+    "net/http"
 
-	"github.com/google/uuid"
+    "github.com/google/uuid"
+    "uas-backend-go/app/model"
 
-	"uas-backend-go/app/model"
-	"uas-backend-go/utils"
-
-	"github.com/gin-gonic/gin"
+    "github.com/gin-gonic/gin"
 )
 
 // Interface untuk UserService agar helper tidak perlu import package service
@@ -57,40 +55,30 @@ func (h *UserHelper) GetByID(c *gin.Context) {
 
 // POST /api/v1/users
 func (h *UserHelper) Create(c *gin.Context) {
-	var user model.User
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
-		return
-	}
+    var user model.User
+    if err := c.ShouldBindJSON(&user); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+        return
+    }
 
-	// ID baru
-	user.ID = uuid.New().String()
-	
-// Hash password langsung setelah binding
-if user.PasswordHash != "" {
-user.PasswordHash = utils.HashPassword(user.PasswordHash)
+    user.ID = uuid.New().String()
 
-}
+    if user.Email == "" {
+        user.Email = user.Username + "@example.com"
+    }
 
+    if _, err := uuid.Parse(user.RoleID); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid role_id"})
+        return
+    }
 
-	// Email default kalau kosong (optional)
-	if user.Email == "" {
-		user.Email = user.Username + "@example.com"
-	}
+    ctx := c.Request.Context()
+    if err := h.Service.Create(ctx, user); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
 
-	// Pastikan RoleID valid UUID
-	if _, err := uuid.Parse(user.RoleID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid role_id"})
-		return
-	}
-
-	ctx := c.Request.Context()
-	if err := h.Service.Create(ctx, user); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, user)
+    c.JSON(http.StatusCreated, user)
 }
 
 // PUT /api/v1/users/:id

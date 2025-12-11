@@ -46,23 +46,36 @@ userRepo := repository.NewUserRepository(database.Postgres)
 permRepo := repository.NewPermissionRepository(database.Postgres)
 achievementMongoRepo := repository.NewAchievementMongoRepository(
     database.MongoDB.Collection("achievements"),
+    
 )
 achievementRefRepo := repository.NewAchievementRefRepository(database.Postgres)
+studentRepo := repository.NewStudentRepository(database.Postgres)
+lecturerRepo := repository.NewLecturerRepository(database.Postgres)
+reportRepo := repository.NewReportRepository(database.Postgres)
 
 // Service
 authService := service.NewAuthService(userRepo, permRepo)
 userService := service.NewUserService(userRepo)
 achievementService := service.NewAchievementService(achievementRefRepo, achievementMongoRepo)
+studentService := service.NewStudentService(studentRepo, achievementRefRepo)
+lecturerService := service.NewLecturerService(lecturerRepo, studentRepo)
+reportService := service.NewReportService(reportRepo)
 
 // Helper
 authHelper := helper.NewAuthHelper(authService)
 userHelper := helper.NewUserHelper(userService)
 achievementHelper := helper.NewAchievementHelper(achievementService)
+studentHelper := helper.NewStudentHelper(studentService)
+lecturerHelper := helper.NewLecturerHelper(lecturerService)
+reportHelper := helper.NewReportHelper(reportService)
 
 // Routes
 route.AuthRoutes(r, authHelper)
 route.UserRoutes(r, userHelper) 
 route.AchievementRoutes(r, achievementHelper)
+route.StudentRoutes(r, studentHelper)
+route.LecturerRoutes(r, lecturerHelper)
+route.ReportRoutes(r, reportHelper)
 
     r.Run(":8080")
 }
