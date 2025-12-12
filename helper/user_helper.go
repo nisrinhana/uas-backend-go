@@ -29,7 +29,16 @@ func NewUserHelper(s UserServiceInterface) *UserHelper {
 	return &UserHelper{Service: s}
 }
 
-// GET /api/v1/users
+
+// GetAll godoc
+// @Summary Get all users
+// @Description Mengambil seluruh data user
+// @Tags Users
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {array} model.User
+// @Failure 500 {object} map[string]string
+// @Router /users [get]
 func (h *UserHelper) GetAll(c *gin.Context) {
 	ctx := c.Request.Context()
 	users, err := h.Service.GetAll(ctx)
@@ -40,7 +49,17 @@ func (h *UserHelper) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-// GET /api/v1/users/:id
+
+// GetByID godoc
+// @Summary Get user by ID
+// @Description Mengambil detail user berdasarkan ID
+// @Tags Users
+// @Security BearerAuth
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} model.User
+// @Failure 404 {object} map[string]string
+// @Router /users/{id} [get]
 func (h *UserHelper) GetByID(c *gin.Context) {
 	id := c.Param("id")
 	ctx := c.Request.Context()
@@ -53,7 +72,19 @@ func (h *UserHelper) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// POST /api/v1/users
+
+// Create godoc
+// @Summary Create a new user
+// @Description Membuat user baru
+// @Tags Users
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param user body model.User true "User Data"
+// @Success 201 {object} model.User
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users [post]
 func (h *UserHelper) Create(c *gin.Context) {
     var user model.User
     if err := c.ShouldBindJSON(&user); err != nil {
@@ -81,7 +112,20 @@ func (h *UserHelper) Create(c *gin.Context) {
     c.JSON(http.StatusCreated, user)
 }
 
-// PUT /api/v1/users/:id
+
+// Update godoc
+// @Summary Update user
+// @Description Mengupdate data user
+// @Tags Users
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Param user body model.User true "Updated User Data"
+// @Success 200 {object} model.User
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users/{id} [put]
 func (h *UserHelper) Update(c *gin.Context) {
 	id := c.Param("id")
 	var user model.User
@@ -98,7 +142,17 @@ func (h *UserHelper) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// DELETE /api/v1/users/:id
+
+// Delete godoc
+// @Summary Delete user
+// @Description Menghapus user berdasarkan ID
+// @Tags Users
+// @Security BearerAuth
+// @Param id path string true "User ID"
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /users/{id} [delete]
 func (h *UserHelper) Delete(c *gin.Context) {
 	id := c.Param("id")
 	ctx := c.Request.Context()
@@ -110,7 +164,20 @@ func (h *UserHelper) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "user deleted"})
 }
 
-// PUT /api/v1/users/:id/role
+
+// UpdateRole godoc
+// @Summary Update user's role
+// @Description Mengganti role user
+// @Tags Users
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Param role body map[string]string true "Role Payload"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users/{id}/role [put]
 func (h *UserHelper) UpdateRole(c *gin.Context) {
     id := c.Param("id")
 

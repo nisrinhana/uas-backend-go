@@ -2,6 +2,9 @@ package model
 
 import "time"
 
+
+// Permission defines access control capabilities.
+// @swagger:model Permission
 type Permission struct {
     ID          string    `db:"id"`
     Name        string    `db:"name"`

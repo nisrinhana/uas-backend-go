@@ -6,6 +6,8 @@ import (
     "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// Achievement represents a student's achievement stored in MongoDB.
+// @swagger:model Achievement
 type Achievement struct {
     ID              primitive.ObjectID `bson:"_id,omitempty" json:"id"`
     Title           string             `bson:"title" json:"title"`

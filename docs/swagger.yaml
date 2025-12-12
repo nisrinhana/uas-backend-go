@@ -1,0 +1,594 @@
+basePath: /api/v1
+definitions:
+  helper.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  model.Lecturer:
+    properties:
+      createdAt:
+        type: string
+      department:
+        type: string
+      id:
+        type: string
+      lecturerID:
+        type: string
+      userID:
+        type: string
+    type: object
+  model.Student:
+    properties:
+      academicYear:
+        type: string
+      advisorID:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      programStudy:
+        type: string
+      studentID:
+        type: string
+      userID:
+        type: string
+    type: object
+  model.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      password_hash:
+        type: string
+      role_id:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Backend API untuk Sistem Pelaporan Prestasi Mahasiswa
+  title: Student Achievement Reporting API
+  version: "1.0"
+paths:
+  /achievements:
+    get:
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get achievements (role-based)
+      tags:
+      - Achievements
+    post:
+      consumes:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create new achievement draft
+      tags:
+      - Achievements
+  /achievements/{id}:
+    delete:
+      parameters:
+      - description: Mongo Achievement ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete achievement draft
+      tags:
+      - Achievements
+    get:
+      parameters:
+      - description: Mongo Achievement ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get achievement detail
+      tags:
+      - Achievements
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Mongo Achievement ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update draft achievement
+      tags:
+      - Achievements
+  /achievements/{id}/attachments:
+    post:
+      parameters:
+      - description: Reference ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Upload file
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Upload achievement attachment
+      tags:
+      - Achievements
+  /achievements/{id}/history:
+    get:
+      parameters:
+      - description: Reference ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get achievement history
+      tags:
+      - Achievements
+  /achievements/{id}/reject:
+    post:
+      parameters:
+      - description: Reference ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Reject student achievement
+      tags:
+      - Achievements
+  /achievements/{id}/submit:
+    post:
+      parameters:
+      - description: Reference ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Submit achievement for verification
+      tags:
+      - Achievements
+  /achievements/{id}/verify:
+    post:
+      parameters:
+      - description: Reference ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Verify student achievement (Lecturer)
+      tags:
+      - Achievements
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/helper.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Logout user
+      tags:
+      - Auth
+  /auth/profile:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get profile
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Refresh JWT token
+      tags:
+      - Auth
+  /lecturers:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Lecturer'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get all lecturers
+      tags:
+      - Lecturers
+  /lecturers/{id}/advisees:
+    get:
+      parameters:
+      - description: Lecturer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get lecturer advisees
+      tags:
+      - Lecturers
+  /reports/statistics:
+    get:
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get global achievement statistics
+      tags:
+      - Reports
+  /reports/student/{id}:
+    get:
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get statistics for a student
+      tags:
+      - Reports
+  /students:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Student'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get all students
+      tags:
+      - Students
+  /students/{id}:
+    get:
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Student'
+      security:
+      - BearerAuth: []
+      summary: Get student by ID
+      tags:
+      - Students
+  /students/{id}/achievements:
+    get:
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items: {}
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get student achievements
+      tags:
+      - Students
+  /students/{id}/advisor:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update student's advisor
+      tags:
+      - Students
+  /users:
+    get:
+      description: Mengambil seluruh data user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Membuat user baru
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new user
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Menghapus user berdasarkan ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete user
+      tags:
+      - Users
+    get:
+      description: Mengambil detail user berdasarkan ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate data user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update user
+      tags:
+      - Users
+  /users/{id}/role:
+    put:
+      consumes:
+      - application/json
+      description: Mengganti role user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Role Payload
+        in: body
+        name: role
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update user's role
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

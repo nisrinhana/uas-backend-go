@@ -19,9 +19,11 @@ func NewAchievementHelper(s *service.AchievementService) *AchievementHelper {
     return &AchievementHelper{Service: s}
 }
 
-//
-// GET /api/v1/achievements (role-based)
-//
+// GetAllAchievements godoc
+// @Summary Get achievements (role-based)
+// @Tags Achievements
+// @Security BearerAuth
+// @Router /achievements [get]
 func (h *AchievementHelper) GetAll(c *gin.Context) {
     role := c.GetString("role")
     userID := c.GetString("user_id")
@@ -48,7 +50,6 @@ func (h *AchievementHelper) GetAll(c *gin.Context) {
             return
         }
 
-        // Gabungkan dengan MongoDB
         var result []gin.H
 
         for _, ref := range refs {
@@ -101,9 +102,13 @@ func (h *AchievementHelper) GetAll(c *gin.Context) {
     }
 }
 
-//
-// GET /api/v1/achievements/:id
-//
+
+// GetAchievementDetail godoc
+// @Summary Get achievement detail
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Mongo Achievement ID"
+// @Router /achievements/{id} [get]
 func (h *AchievementHelper) GetDetail(c *gin.Context) {
     mongoID := c.Param("id")
 
@@ -124,9 +129,12 @@ func (h *AchievementHelper) GetDetail(c *gin.Context) {
     c.JSON(http.StatusOK, ach)
 }
 
-//
-// POST /api/v1/achievements (Student)
-//
+// CreateAchievement godoc
+// @Summary Create new achievement draft
+// @Tags Achievements
+// @Security BearerAuth
+// @Accept json
+// @Router /achievements [post]
 func (h *AchievementHelper) Create(c *gin.Context) {
     var req model.Achievement
 
@@ -161,9 +169,13 @@ func (h *AchievementHelper) Create(c *gin.Context) {
 
 }
 
-//
-// PUT /api/v1/achievements/:id (only draft)
-//
+// UpdateAchievement godoc
+// @Summary Update draft achievement
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Mongo Achievement ID"
+// @Accept json
+// @Router /achievements/{id} [put]
 func (h *AchievementHelper) Update(c *gin.Context) {
     mongoID := c.Param("id")
 
@@ -194,7 +206,13 @@ func (h *AchievementHelper) Update(c *gin.Context) {
     })
 }
 
-// DELETE /api/v1/achievements/:id 
+
+// DeleteAchievement godoc
+// @Summary Delete achievement draft
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Mongo Achievement ID"
+// @Router /achievements/{id} [delete]
 func (h *AchievementHelper) Delete(c *gin.Context) {
     mongoID := c.Param("id")
     ctx := c.Request.Context()
@@ -245,9 +263,13 @@ func (h *AchievementHelper) Delete(c *gin.Context) {
     })
 }
 
-//
-// POST /api/v1/achievements/:id/submit
-//
+
+// SubmitAchievement godoc
+// @Summary Submit achievement for verification
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Reference ID"
+// @Router /achievements/{id}/submit [post]
 func (h *AchievementHelper) Submit(c *gin.Context) {
     refID := c.Param("id")
     ctx := c.Request.Context()
@@ -293,9 +315,13 @@ func (h *AchievementHelper) Submit(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "submitted"})
 }
 
-//
-// POST /api/v1/achievements/:id/verify (Dosen Wali)
-//
+
+// VerifyAchievement godoc
+// @Summary Verify student achievement (Lecturer)
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Reference ID"
+// @Router /achievements/{id}/verify [post]
 func (h *AchievementHelper) Verify(c *gin.Context) {
     refID := c.Param("id")
     userID := c.GetString("user_id")
@@ -332,9 +358,13 @@ func (h *AchievementHelper) Verify(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "verified"})
 }
 
-//
-// POST /api/v1/achievements/:id/reject
-//
+
+// RejectAchievement godoc
+// @Summary Reject student achievement
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Reference ID"
+// @Router /achievements/{id}/reject [post]
 func (h *AchievementHelper) Reject(c *gin.Context) {
     refID := c.Param("id")
     ctx := c.Request.Context()
@@ -366,9 +396,13 @@ func (h *AchievementHelper) Reject(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"message": "rejected"})
 }
 
-//
-// GET /api/v1/achievements/:id/history
-//
+
+// GetAchievementHistory godoc
+// @Summary Get achievement history
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Reference ID"
+// @Router /achievements/{id}/history [get]
 func (h *AchievementHelper) GetHistory(c *gin.Context) {
     refID := c.Param("id")
     ctx := c.Request.Context()
@@ -390,9 +424,14 @@ func (h *AchievementHelper) GetHistory(c *gin.Context) {
     c.JSON(http.StatusOK, history)
 }
 
-//
-// POST /api/v1/achievements/:id/attachments
-//
+
+// UploadAttachment godoc
+// @Summary Upload achievement attachment
+// @Tags Achievements
+// @Security BearerAuth
+// @Param id path string true "Reference ID"
+// @Param file formData file true "Upload file"
+// @Router /achievements/{id}/attachments [post]
 func (h *AchievementHelper) UploadAttachment(c *gin.Context) {
     refID := c.Param("id")              // <-- Ini harus refID (bukan mongoID)
     userID := c.GetString("user_id")

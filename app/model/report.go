@@ -1,5 +1,8 @@
 package model
 
+
+// GlobalStatistics represents analytics for the entire system.
+// @swagger:model GlobalStatistics
 type GlobalStatistics struct {
     TotalStudents     int `json:"total_students"`
     TotalLecturers    int `json:"total_lecturers"`
@@ -11,6 +14,8 @@ type GlobalStatistics struct {
     RejectedCount  int `json:"rejected"`
 }
 
+// StudentStatistics represents analytics for a single student.
+// @swagger:model StudentStatistics
 type StudentStatistics struct {
     StudentID        string  `json:"student_id"`
     Total            int     `json:"total"`

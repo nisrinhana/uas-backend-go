@@ -1,3 +1,11 @@
+// @title Student Achievement Reporting API
+// @version 1.0
+// @description Backend API untuk Sistem Pelaporan Prestasi Mahasiswa
+// @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 package main
 
 import (
@@ -6,6 +14,11 @@ import (
 
     "github.com/gin-gonic/gin"
     "github.com/joho/godotenv"
+
+    swaggerFiles "github.com/swaggo/files"
+    ginSwagger "github.com/swaggo/gin-swagger"
+    docs "uas-backend-go/docs"
+
     "uas-backend-go/database"
     "uas-backend-go/app/repository"
     "uas-backend-go/app/service"
@@ -76,6 +89,9 @@ route.AchievementRoutes(r, achievementHelper)
 route.StudentRoutes(r, studentHelper)
 route.LecturerRoutes(r, lecturerHelper)
 route.ReportRoutes(r, reportHelper)
+
+docs.SwaggerInfo.BasePath = "/api/v1"
+r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
     r.Run(":8080")
 }

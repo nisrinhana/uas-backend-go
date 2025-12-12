@@ -25,7 +25,7 @@ func (s *UserService) GetByID(ctx context.Context, id string) (model.User, error
 
 func (s *UserService) Create(ctx context.Context, user model.User) error {
 
-    // 🔥 HASH PASSWORD DULU
+    // HASH PASSWORD DULU
     hashed, err := bcrypt.GenerateFromPassword([]byte(user.PasswordHash), bcrypt.DefaultCost)
     if err != nil {
         return err

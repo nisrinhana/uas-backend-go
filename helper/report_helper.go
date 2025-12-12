@@ -13,6 +13,11 @@ func NewReportHelper(s *service.ReportService) *ReportHelper {
     return &ReportHelper{Service: s}
 }
 
+// GetGlobalStatistics godoc
+// @Summary Get global achievement statistics
+// @Tags Reports
+// @Security BearerAuth
+// @Router /reports/statistics [get]
 func (h *ReportHelper) GetGlobal(c *gin.Context) {
     data, err := h.Service.GetGlobalStatistics(c.Request.Context())
     if err != nil {
@@ -22,6 +27,12 @@ func (h *ReportHelper) GetGlobal(c *gin.Context) {
     c.JSON(200, data)
 }
 
+// GetStudentStatistics godoc
+// @Summary Get statistics for a student
+// @Tags Reports
+// @Security BearerAuth
+// @Param id path string true "Student ID"
+// @Router /reports/student/{id} [get]
 func (h *ReportHelper) GetStudent(c *gin.Context) {
     id := c.Param("id")
 

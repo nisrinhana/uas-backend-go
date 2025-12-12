@@ -13,6 +13,12 @@ func NewStudentHelper(s *service.StudentService) *StudentHelper {
     return &StudentHelper{Service: s}
 }
 
+// GetAllStudents godoc
+// @Summary Get all students
+// @Tags Students
+// @Security BearerAuth
+// @Success 200 {array} model.Student
+// @Router /students [get]
 func (h *StudentHelper) GetAll(c *gin.Context) {
     data, err := h.Service.GetAll(c.Request.Context())
     if err != nil {
@@ -22,6 +28,13 @@ func (h *StudentHelper) GetAll(c *gin.Context) {
     c.JSON(200, data)
 }
 
+// GetStudentByID godoc
+// @Summary Get student by ID
+// @Tags Students
+// @Security BearerAuth
+// @Param id path string true "Student ID"
+// @Success 200 {object} model.Student
+// @Router /students/{id} [get]
 func (h *StudentHelper) GetByID(c *gin.Context) {
     id := c.Param("id")
     data, err := h.Service.GetByID(c.Request.Context(), id)
@@ -32,6 +45,14 @@ func (h *StudentHelper) GetByID(c *gin.Context) {
     c.JSON(200, data)
 }
 
+
+// GetStudentAchievements godoc
+// @Summary Get student achievements
+// @Tags Students
+// @Security BearerAuth
+// @Param id path string true "Student ID"
+// @Success 200 {array} interface{}
+// @Router /students/{id}/achievements [get]
 func (h *StudentHelper) GetAchievements(c *gin.Context) {
     id := c.Param("id")
     data, err := h.Service.GetAchievements(c.Request.Context(), id)
@@ -42,6 +63,14 @@ func (h *StudentHelper) GetAchievements(c *gin.Context) {
     c.JSON(200, data)
 }
 
+
+// UpdateAdvisor godoc
+// @Summary Update student's advisor
+// @Tags Students
+// @Security BearerAuth
+// @Param id path string true "Student ID"
+// @Accept json
+// @Router /students/{id}/advisor [put]
 func (h *StudentHelper) UpdateAdvisor(c *gin.Context) {
     id := c.Param("id")
 
